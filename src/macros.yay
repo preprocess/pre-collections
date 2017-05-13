@@ -1,0 +1,45 @@
+<?php
+
+macro {
+    <>
+} >> {
+    (new \Pre\Collections\Collection)
+}
+
+macro ·recursion {
+    ·chain(
+        ·token("<"),
+        ·angle_layer()·values,
+        ·token(">"),
+        ·_()·is_array,
+        ·_()·is_not_array
+    )
+} >> function($ast) {
+    $found = false;
+
+    foreach ($ast->{"·values"} as $token) {
+        if ($token->is(T_DOUBLE_ARROW)) {
+            $found = true;
+        }
+    }
+
+    $append = null;
+
+    if ($found) {
+        $append = new \Yay\Ast("·is_array");
+        $append->push(new \Yay\Ast());
+    } else {
+        $append = new \Yay\Ast("·is_not_array");
+        $append->push(new \Yay\Ast());
+    }
+
+    $ast->append($append);
+} >> {··trim(
+    ·is_array ?·{
+        (new \Pre\Collections\Collection([·values]))
+    }
+
+    ·is_not_array ?·{
+        (new \Pre\Collections\Collection(·values))
+    }
+)}
