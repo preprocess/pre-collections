@@ -24,7 +24,13 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
         }
 
         if (is_array($data)) {
-            $this->data = $data;
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    $this->data[$key] = new static($value);
+                } else {
+                    $this->data[$key] = $value;
+                }
+            }
         }
     }
 
@@ -74,7 +80,17 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
 
     public function toArray()
     {
-        return $this->data;
+        $array = [];
+
+        foreach ($this->data as $key => $value) {
+            if ($value instanceof static) {
+                $array[$key] = $value->toArray();
+            } else {
+                $array[$key] = $value;
+            }
+        }
+
+        return $array;
     }
 
     public function getIterator()
