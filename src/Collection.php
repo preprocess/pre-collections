@@ -137,7 +137,9 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
 
     public function with($key, $value)
     {
-        $this[$key] = $value;
-        return $this;
+        $clone = clone($this);
+        $clone[$key] = $value;
+
+        return $clone;
     }
 }
