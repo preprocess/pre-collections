@@ -4,6 +4,7 @@ namespace Pre\Collections;
 
 use ArrayAccess;
 use ArrayIterator;
+use Closure;
 use Countable;
 use IteratorAggregate;
 use Serializable;
@@ -26,7 +27,7 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
         if (is_array($data)) {
             foreach ($data as $key => $value) {
                 if (is_array($value)) {
-                    $this->data[$key] = new static($value);
+                    $this->data[$key] = new self($value);
                 } else {
                     $this->data[$key] = $value;
                 }
@@ -83,7 +84,7 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
         $array = [];
 
         foreach ($this->data as $key => $value) {
-            if ($value instanceof static) {
+            if ($value instanceof self) {
                 $array[$key] = $value->toArray();
             } else {
                 $array[$key] = $value;
@@ -141,5 +142,36 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
         $clone[$key] = $value;
 
         return $clone;
+    }
+
+    public function map(Closure $map)
+    {
+        $mapped = [];
+
+        foreach ($this->data as $key => $value) {
+            $mapped[$key] = $map($value, $key);
+        }
+
+        return new self($mapped);
+    }
+
+    public function filter(Closure $filter)
+    {
+        $filtered = [];
+
+        foreach ($this->data as $key => $value) {
+            if ($filter($value, $key)) {
+                $filtered[$key] = $value;
+            }
+        }
+
+        return new self($filtered);
+    }
+
+    public function each(Closure $each)
+    {
+        foreach ($this->data as $key => $value) {
+            $each($value, $key);
+        }
     }
 }
