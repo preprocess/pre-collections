@@ -4,6 +4,7 @@ namespace Pre\Collections;
 
 use ArrayIterator;
 use InvalidArgumentException;
+use Iterator;
 use PHPUnit\Framework\TestCase;
 use Pre\Collections\Collection;
 
@@ -176,5 +177,217 @@ class CollectionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         (new Collection())->without();
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::__get
+     * @covers Pre\Collections\Collection::__set
+     */
+    public function can_get_and_set_values_with_arrows()
+    {
+        $collection = new Collection();
+
+        $this->assertNull($collection->hello);
+
+        $collection->hello = "world";
+
+        $this->assertEquals("world", $collection->hello);
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::offsetSet
+     * @covers Pre\Collections\Collection::offsetGet
+     */
+    public function can_get_and_set_values_with_array_access()
+    {
+        $collection = new Collection();
+
+        $this->assertNull($collection["hello"]);
+
+        $collection["hello"] = "world";
+
+        $this->assertEquals("world", $collection["hello"]);
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::__isset
+     * @covers Pre\Collections\Collection::offsetExists
+     */
+    public function can_always_show_isset()
+    {
+        $collection = new Collection();
+
+        $this->assertTrue(isset($collection->hello));
+        $this->assertNull($collection->hello);
+
+        $this->assertTrue(isset($collection["hello"]));
+        $this->assertNull($collection["hello"]);
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::__unset
+     */
+    public function can_unset_with_arrows()
+    {
+        $collection = new Collection();
+        $collection->hello = "world";
+
+        $this->assertNotNull($collection->hello);
+
+        unset($collection->hello);
+
+        $this->assertNull($collection->hello);
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::offsetUnset
+     */
+    public function can_unset_with_array_access()
+    {
+        $collection = new Collection();
+        $collection["hello"] = "world";
+
+        $this->assertNotNull($collection["hello"]);
+
+        unset($collection["hello"]);
+
+        $this->assertNull($collection["hello"]);
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::toArray
+     */
+    public function can_convert_to_arrays()
+    {
+        $expected = [
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+            "nested" => [
+                "five" => 5
+            ]
+        ];
+
+        $collection = new Collection($expected);
+
+        $this->assertEquals($expected, $collection->toArray());
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::getIterator
+     */
+    public function can_get_iterators()
+    {
+        $expected = [
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ];
+
+        $collection = new Collection($expected);
+
+        $this->assertInstanceOf(Iterator::class, $collection->getIterator());
+        $this->assertEquals($expected, iterator_to_array($collection));
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::count
+     * @covers Pre\Collections\Collection::length
+     */
+    public function can_get_length()
+    {
+        $collection = new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]);
+
+        $this->assertEquals(3, count($collection));
+        $this->assertEquals(3, $collection->length());
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::serialize
+     * @covers Pre\Collections\Collection::unserialize
+     */
+    public function can_get_serialize_and_unserialize()
+    {
+        $collection = new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]);
+
+        $expected = 'C:26:"Pre\Collections\Collection":50:{a:3:{s:3:"one";i:1;s:3:"two";i:2;s:5:"three";i:3;}}';
+        $actual = serialize($collection);
+
+        $this->assertEquals($expected, $actual);
+        $this->assertEquals($collection, unserialize($actual));
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::with
+     */
+    public function can_add_values_using_with()
+    {
+        $collection = new Collection([
+            "one" => 1,
+            "two" => 2,
+        ]);
+
+        $new = $collection->with("three", 3);
+
+        $this->assertEquals(3, $new->three);
+        $this->assertNotSame($collection, $new);
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::__construct
+     */
+    public function can_create_from_all_kinds_of_input()
+    {
+        $fromArray = new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]);
+
+        $fromObject = new Collection(
+            json_decode('{"one":1,"two":2,"three":3}')
+        );
+
+        $fromCollection = new Collection(new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]));
+
+        $fromIterator = new Collection(new ArrayIterator([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]));
+
+        $expected = [
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ];
+
+        $this->assertEquals($expected, $fromArray->toArray());
+        $this->assertEquals($expected, $fromObject->toArray());
+        $this->assertEquals($expected, $fromCollection->toArray());
+        $this->assertEquals($expected, $fromIterator->toArray());
     }
 }

@@ -7,6 +7,7 @@ use ArrayIterator;
 use Closure;
 use Countable;
 use InvalidArgumentException;
+use Iterator;
 use IteratorAggregate;
 use Serializable;
 use stdClass;
@@ -17,23 +18,27 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
 
     public function __construct($data = null)
     {
-        if ($data instanceof self) {
-            $this->data = $data->toArray();
+        if (is_object($data) && method_exists($data, "toArray")) {
+            $data = $data->toArray();
         }
 
-        if ($data instanceof stdClass) {
-            $this->data = (array) $data;
+        if ($data instanceof Iterator) {
+            $data = iterator_to_array($data);
+        }
+
+        if (is_object($data)) {
+            $data = (array) $data;
         }
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                if (is_array($value)) {
-                    $this->data[$key] = new self($value);
-                } else {
-                    $this->data[$key] = $value;
+                if (is_array($value) || is_object($value)) {
+                    $data[$key] = new self($value);
                 }
             }
         }
+
+        $this->data = $data;
     }
 
     public function offsetSet($key, $value)
@@ -112,7 +117,7 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
 
     public function unserialize($serialized)
     {
-        $this->data = unserialize($serialised);
+        $this->data = unserialize($serialized);
     }
 
     public function without(...$keys)
@@ -129,7 +134,7 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
             $keys = $keys[0]->toArray();
         }
 
-        if (is_iterable($keys[0])) {
+        if ($keys[0] instanceof Iterator) {
             $keys = iterator_to_array($keys[0]);
         }
 
