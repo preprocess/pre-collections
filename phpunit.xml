@@ -19,6 +19,9 @@
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src</directory>
+            <exclude>
+                <file>src/parsers.php</file>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

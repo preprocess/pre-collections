@@ -6,6 +6,7 @@ use ArrayAccess;
 use ArrayIterator;
 use Closure;
 use Countable;
+use InvalidArgumentException;
 use IteratorAggregate;
 use Serializable;
 use stdClass;
@@ -116,8 +117,20 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
 
     public function without(...$keys)
     {
-        if (count($keys) === 1 && is_array($keys[0])) {
+        if (count($keys) < 1) {
+            throw new InvalidArgumentException("without called with no keys");
+        }
+
+        if (is_array($keys[0])) {
             $keys = $keys[0];
+        }
+
+        if (is_object($keys[0]) && method_exists($keys[0], "toArray")) {
+            $keys = $keys[0]->toArray();
+        }
+
+        if (is_iterable($keys[0])) {
+            $keys = iterator_to_array($keys[0]);
         }
 
         $filtered = [];
@@ -173,5 +186,31 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
         foreach ($this->data as $key => $value) {
             $each($value, $key);
         }
+    }
+
+    public function reduce(Closure $reduce, $accumulator = null)
+    {
+        foreach ($this->data as $key => $value) {
+            $accumulator = $reduce($value, $key, $accumulator);
+        }
+
+        return $accumulator;
+    }
+
+    public function merge(...$others)
+    {
+        $data = $this->data;
+
+        foreach ($others as $other) {
+            if (!is_iterable($other)) {
+                continue;
+            }
+
+            foreach ($other as $key => $value) {
+                $data[$key] = $value;
+            }
+        }
+
+        return new self($data);
     }
 }
