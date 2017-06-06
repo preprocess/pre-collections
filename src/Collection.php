@@ -38,7 +38,9 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
             }
         }
 
-        $this->data = $data;
+        if (is_array($data)) {
+          $this->data = $data;
+        }
     }
 
     public function offsetSet($key, $value)
