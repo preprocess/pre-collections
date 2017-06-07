@@ -209,13 +209,9 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
         $data = $this->data;
 
         foreach ($others as $other) {
-            if (!is_iterable($other)) {
-                continue;
-            }
-
-            foreach ($other as $key => $value) {
-                $data[$key] = $value;
-            }
+            $collection = new self($other);
+            $data = array_merge($data, $collection->toArray());
+            $collection = null;
         }
 
         return new self($data);

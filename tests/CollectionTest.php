@@ -141,6 +141,22 @@ class CollectionTest extends TestCase
 
     /**
      * @test
+     * @covers Pre\Collections\Collection::merge
+     */
+    public function can_merge_arrays_with_numeric_keys()
+    {
+        $expected = ["one", "two", "three", "four", "five", "six"];
+
+        $actual = (new Collection())
+            ->merge(["one", "two", "three"])
+            ->merge(["four", "five", "six"])
+            ->toArray();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @test
      * @covers Pre\Collections\Collection::without
      */
     public function can_exclude_keys_with_without()
