@@ -7,9 +7,21 @@ macro {
 }
 
 macro {
+    return <>
+} >> {
+    return (new \Pre\Collections\Collection)
+}
+
+macro {
     = {}
 } >> {
     = (new \Pre\Collections\Collection)
+}
+
+macro {
+    return {}
+} >> {
+    return (new \Pre\Collections\Collection)
 }
 
 macro ·recursion {
@@ -44,7 +56,10 @@ macro ·recursion {
 
 macro ·recursion {
     ·chain(
-        ·token("="),
+        ·either(
+            return,
+            ·token("=")
+        )·before,
         ·either(
             ·token("<"),
             ·token("{")
@@ -79,10 +94,10 @@ macro ·recursion {
     $ast->append($append);
 } >> {··trim(
     ·is_array ?·{
-        = (new \Pre\Collections\Collection([·values]))
+        ·before (new \Pre\Collections\Collection([·values]))
     }
 
     ·is_not_array ?·{
-        = (new \Pre\Collections\Collection(·values))
+        ·before (new \Pre\Collections\Collection(·values))
     }
 )}
