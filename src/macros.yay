@@ -1,16 +1,59 @@
 <?php
 
 macro {
-    <>
+    = <>
 } >> {
-    (new \Pre\Collections\Collection)
+    = (new \Pre\Collections\Collection)
+}
+
+macro {
+    = {}
+} >> {
+    = (new \Pre\Collections\Collection)
 }
 
 macro ·recursion {
     ·chain(
-        ·token("<"),
+        ·either(
+            ·token("<"),
+            ·token("{")
+        ),
         ·angle_layer()·values,
-        ·token(">"),
+        ·either(
+            ·token(">"),
+            ·token("}")
+        ),
+        ·token("="),
+        ·_()·keys
+    )
+} >> function($ast) {
+    $keys = new \Yay\Ast("·keys");
+
+    foreach ($ast->{"·values"} as $token) {
+        if (!$token->is(T_VARIABLE)) {
+            continue;
+        }
+
+        $keys->push(new \Yay\Ast("·var", $token));
+    }
+
+    $ast->append($keys);
+} >> {··trim(
+    [··trim(·keys ···(, ) {··trim( ··stringify(··unvar(·var)) => ·var )})] =
+)}
+
+macro ·recursion {
+    ·chain(
+        ·token("="),
+        ·either(
+            ·token("<"),
+            ·token("{")
+        ),
+        ·angle_layer()·values,
+        ·either(
+            ·token(">"),
+            ·token("}")
+        ),
         ·_()·is_array,
         ·_()·is_not_array
     )
@@ -36,10 +79,10 @@ macro ·recursion {
     $ast->append($append);
 } >> {··trim(
     ·is_array ?·{
-        (new \Pre\Collections\Collection([·values]))
+        = (new \Pre\Collections\Collection([·values]))
     }
 
     ·is_not_array ?·{
-        (new \Pre\Collections\Collection(·values))
+        = (new \Pre\Collections\Collection(·values))
     }
 )}

@@ -4,25 +4,54 @@ Test collections macros
 
 --GIVEN--
 
-$a = <>;
+$a1 = <>;
 
-$b = <$a>;
+$a2 = {};
 
-$c = <"foo" => "bar">;
+$b1 = <$a1>;
 
-$d = <
+$b2 = {$a2};
+
+$c1 = <"foo" => "bar">;
+
+$c2 = {"foo" => "bar"};
+
+$d1 = <
     "hello" => "world",
     "goodbye" => "world",
 >;
 
+$d2 = {
+    "hello" => "world",
+    "goodbye" => "world",
+};
+
+< $a, $b, $c > = ["a" => 1, "b" => 2, "c" => 3];
+
+{ $a, $b, $c } = ["a" => 1, "b" => 2, "c" => 3];
+
 --EXPECT--
 
-$a = (new \Pre\Collections\Collection);
+$a1 = (new \Pre\Collections\Collection);
 
-$b = (new \Pre\Collections\Collection($a));
+$a2 = (new \Pre\Collections\Collection);
 
-$c = (new \Pre\Collections\Collection(["foo" => "bar"]));
+$b1 = (new \Pre\Collections\Collection($a1));
 
-$d = (new \Pre\Collections\Collection(["hello" => "world",
+$b2 = (new \Pre\Collections\Collection($a2));
+
+$c1 = (new \Pre\Collections\Collection(["foo" => "bar"]));
+
+$c2 = (new \Pre\Collections\Collection(["foo" => "bar"]));
+
+$d1 = (new \Pre\Collections\Collection(["hello" => "world",
     "goodbye" => "world",
 ]));
+
+$d2 = (new \Pre\Collections\Collection(["hello" => "world",
+    "goodbye" => "world",
+]));
+
+['a' => $a, 'b' => $b, 'c' => $c] = ["a" => 1, "b" => 2, "c" => 3];
+
+['a' => $a, 'b' => $b, 'c' => $c] = ["a" => 1, "b" => 2, "c" => 3];
