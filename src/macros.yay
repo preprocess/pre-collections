@@ -1,6 +1,12 @@
 <?php
 
 macro {
+    , <>
+} >> {
+    , (new \Pre\Collections\Collection)
+}
+
+macro {
     = <>
 } >> {
     = (new \Pre\Collections\Collection)
@@ -10,6 +16,12 @@ macro {
     return <>
 } >> {
     return (new \Pre\Collections\Collection)
+}
+
+macro {
+    , {}
+} >> {
+    , (new \Pre\Collections\Collection)
 }
 
 macro {
@@ -58,6 +70,7 @@ macro ·recursion {
     ·chain(
         ·either(
             return,
+            ·token(","),
             ·token("=")
         )·before,
         ·either(

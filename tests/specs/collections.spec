@@ -4,6 +4,10 @@ Test collections macros
 
 --GIVEN--
 
+return [true, {"foo" => "bar"}];
+
+return [true, <"foo" => "bar">];
+
 return {};
 
 return <>;
@@ -53,6 +57,11 @@ $d2 = {
 { $a, $b, $c } = ["a" => 1, "b" => 2, "c" => 3];
 
 --EXPECT--
+
+
+return [true, (new \Pre\Collections\Collection(["foo" => "bar"]))];
+
+return [true, (new \Pre\Collections\Collection(["foo" => "bar"]))];
 
 return (new \Pre\Collections\Collection);
 
