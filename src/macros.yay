@@ -1,52 +1,10 @@
 <?php
 
-macro {
-    , <>
-} >> {
-    , (new \Pre\Collections\Collection)
-}
-
-macro {
-    = <>
-} >> {
-    = (new \Pre\Collections\Collection)
-}
-
-macro {
-    return <>
-} >> {
-    return (new \Pre\Collections\Collection)
-}
-
-macro {
-    , {}
-} >> {
-    , (new \Pre\Collections\Collection)
-}
-
-macro {
-    = {}
-} >> {
-    = (new \Pre\Collections\Collection)
-}
-
-macro {
-    return {}
-} >> {
-    return (new \Pre\Collections\Collection)
-}
-
 macro ·recursion {
     ·chain(
-        ·either(
-            ·token("<"),
-            ·token("{")
-        ),
+        ·token("{"),
         ·angle_layer()·values,
-        ·either(
-            ·token(">"),
-            ·token("}")
-        ),
+        ·token("}"),
         ·token("="),
         ·_()·keys
     )
@@ -70,18 +28,14 @@ macro ·recursion {
     ·chain(
         ·either(
             return,
+            ·token("["),
+            ·token("("),
             ·token(","),
             ·token("=")
         )·before,
-        ·either(
-            ·token("<"),
-            ·token("{")
-        ),
-        ·angle_layer()·values,
-        ·either(
-            ·token(">"),
-            ·token("}")
-        ),
+        ·token("{"),
+        ·optional(·angle_layer())·values,
+        ·token("}"),
         ·_()·is_array,
         ·_()·is_not_array
     )
