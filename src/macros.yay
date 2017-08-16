@@ -32,7 +32,16 @@ macro ·recursion {
             ·token("("),
             ·token(","),
             ·token("="),
-            ·operator("=>")
+            ·chain(
+                ·either(
+                    ·token(T_CONSTANT_ENCAPSED_STRING),
+                    ·token(T_LNUMBER),
+                    ·token(T_DNUMBER),
+                    ·token(T_STRING),
+                    ·token(T_VARIABLE)
+                ),
+                ·operator("=>")
+            )
         )·before,
         ·token("{"),
         ·optional(·angle_layer())·values,

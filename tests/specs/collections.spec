@@ -38,13 +38,17 @@ $d = {
 
 { $a, $b, $c } = ["a" => 1, "b" => 2, "c" => 3];
 
+() => {}
+
+["foo" => {"bar" => "baz"}]
+
 --EXPECT--
 
-((new \Pre\Collections\Collection()));
+( (new \Pre\Collections\Collection()));
 
 [ (new \Pre\Collections\Collection())];
 
-((new \Pre\Collections\Collection(["foo" => "bar"])));
+( (new \Pre\Collections\Collection(["foo" => "bar"])));
 
 [ (new \Pre\Collections\Collection(["foo" => "bar"]))];
 
@@ -71,3 +75,7 @@ $d = (new \Pre\Collections\Collection(["hello" => "world",
 ]));
 
 ['a' => $a, 'b' => $b, 'c' => $c] = ["a" => 1, "b" => 2, "c" => 3];
+
+() => {}
+
+["foo"=> (new \Pre\Collections\Collection(["bar" => "baz"]))]
