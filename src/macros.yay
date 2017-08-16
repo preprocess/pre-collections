@@ -31,7 +31,8 @@ macro ·recursion {
             ·token("["),
             ·token("("),
             ·token(","),
-            ·token("=")
+            ·token("="),
+            ·operator("=>")
         )·before,
         ·token("{"),
         ·optional(·angle_layer())·values,
