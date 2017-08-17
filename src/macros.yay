@@ -32,6 +32,10 @@ macro ·recursion {
             ·token("("),
             ·token(","),
             ·token("="),
+            ·token("?"),
+            ·operator("??"),
+            ·operator("&&"),
+            ·operator("||"),
             ·chain(
                 ·either(
                     ·token(T_CONSTANT_ENCAPSED_STRING),
