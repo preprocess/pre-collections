@@ -198,7 +198,7 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
     public function reduce(Closure $reduce, $accumulator = null)
     {
         foreach ($this->data as $key => $value) {
-            $accumulator = $reduce($value, $key, $accumulator);
+            $accumulator = $reduce($accumulator, $value, $key);
         }
 
         return $accumulator;
@@ -215,5 +215,20 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
         }
 
         return new self($data);
+    }
+
+    public function join($glue = "")
+    {
+        return join($glue, $this->data);
+    }
+
+    public function keys()
+    {
+        return new self(array_keys($this->data));
+    }
+
+    public function values()
+    {
+        return new self(array_values($this->data));
     }
 }

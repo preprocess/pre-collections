@@ -98,7 +98,7 @@ class CollectionTest extends TestCase
             "three" => 3,
         ]);
 
-        $result = $collection->reduce(function($value, $key, $accumulator) {
+        $result = $collection->reduce(function($accumulator, $value, $key) {
             return $accumulator + $value;
         });
 
@@ -405,5 +405,58 @@ class CollectionTest extends TestCase
         $this->assertEquals($expected, $fromObject->toArray());
         $this->assertEquals($expected, $fromCollection->toArray());
         $this->assertEquals($expected, $fromIterator->toArray());
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::join
+     */
+    public function can_join_values()
+    {
+        $collection = new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]);
+
+        $expected1 = "123";
+        $expected2 = "1,2,3";
+
+        $this->assertEquals($expected1, $collection->join());
+        $this->assertEquals($expected2, $collection->join(","));
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::keys
+     */
+    public function can_get_keys()
+    {
+        $collection = new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]);
+
+        $expected = ["one", "two", "three"];
+
+        $this->assertEquals($expected, $collection->keys()->toArray());
+    }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::values
+     */
+    public function can_get_values()
+    {
+        $collection = new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]);
+
+        $expected = [1, 2, 3];
+
+        $this->assertEquals($expected, $collection->values()->toArray());
     }
 }
