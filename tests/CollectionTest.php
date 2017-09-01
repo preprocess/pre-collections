@@ -459,4 +459,28 @@ class CollectionTest extends TestCase
 
         $this->assertEquals($expected, $collection->values()->toArray());
     }
+
+    /**
+     * @test
+     * @covers Pre\Collections\Collection::__set_state
+     */
+    public function can_export_data()
+    {
+        $collection = new Collection([
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ]);
+
+        $exported = var_export($collection, true);
+        $evaluated = eval("return {$exported};");
+
+        $expected = [
+            "one" => 1,
+            "two" => 2,
+            "three" => 3,
+        ];
+
+        $this->assertEquals($expected, $evaluated->toArray());
+    }
 }
