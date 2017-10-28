@@ -2,14 +2,8 @@
     "type": "pre-macro",
     "name": "pre/collections",
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../pre-plugin"
-        }
-    ],
     "require": {
-        "pre/plugin": "*"
+        "pre/plugin": "^0.10.0"
     },
     "autoload": {
         "psr-4": {
@@ -21,7 +15,5 @@
     },
     "extra": {
         "macros": ["source/macros.yay"]
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
