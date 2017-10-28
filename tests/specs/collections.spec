@@ -1,9 +1,3 @@
---DESCRIPTION--
-
-Test collections macros
-
---GIVEN--
-
 ({});
 
 [{}];
@@ -42,7 +36,7 @@ $d = {
 
 ["foo" => {"bar" => "baz"}]
 
---EXPECT--
+~~~
 
 ( (new \Pre\Collections\Collection()));
 

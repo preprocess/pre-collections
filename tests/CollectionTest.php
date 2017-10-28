@@ -1,10 +1,5 @@
 <?php
 
-namespace Pre\Collections;
-
-use ArrayIterator;
-use InvalidArgumentException;
-use Iterator;
 use PHPUnit\Framework\TestCase;
 use Pre\Collections\Collection;
 
