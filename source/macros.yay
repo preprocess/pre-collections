@@ -3,7 +3,7 @@
 macro ·recursion {
     ·chain(
         ·token("{"),
-        ·angle_layer()·values,
+        ·layer()·values,
         ·token("}"),
         ·token("="),
         ·_()·keys
@@ -48,7 +48,7 @@ macro ·recursion {
             )
         )·before,
         ·token("{"),
-        ·optional(·angle_layer())·values,
+        ·optional(·layer())·values,
         ·token("}"),
         ·_()·is_array,
         ·_()·is_not_array
