@@ -1,62 +1,64 @@
 <?php
 
-macro ·recursion {
-    ·chain(
-        ·token("{"),
-        ·layer()·values,
-        ·token("}"),
-        ·token("="),
-        ·_()·keys
-    )
+$(macro :recursion) {
+    $(chain(
+        token("{"),
+        layer() as values,
+        token("}"),
+        token("="),
+        _() as keys
+    ))
 } >> function($ast) {
-    $keys = new \Yay\Ast("·keys");
+    $keys = new \Yay\Ast("keys");
 
-    foreach ($ast->{"·values"} as $token) {
+    foreach ($ast->{"values"} as $token) {
         if (!$token->is(T_VARIABLE)) {
             continue;
         }
 
-        $keys->push(new \Yay\Ast("·var", $token));
+        $keys->push(new \Yay\Ast("var", $token));
     }
 
     $ast->append($keys);
-} >> {··trim(
-    [··trim(·keys ···(, ) {··trim( ··stringify(··unvar(·var)) => ·var )})] =
-)}
+} >> {$$(trim(
+    [$$(trim(
+        $(keys ... (, ) {$$(trim($$(stringify($$(unvar($(var))))) => $(var)))})
+    ))] =
+))}
 
-macro ·recursion {
-    ·chain(
-        ·either(
+$(macro :recursion) {
+    $(chain(
+        either(
             return,
-            ·token("["),
-            ·token("("),
-            ·token(","),
-            ·token("="),
-            ·token("?"),
-            ·operator("??"),
-            ·operator("&&"),
-            ·operator("||"),
-            ·chain(
-                ·either(
-                    ·token(T_CONSTANT_ENCAPSED_STRING),
-                    ·token(T_LNUMBER),
-                    ·token(T_DNUMBER),
-                    ·token(T_STRING),
-                    ·token(T_VARIABLE)
+            token("["),
+            token("("),
+            token(","),
+            token("="),
+            token("?"),
+            buffer("??"),
+            buffer("&&"),
+            buffer("||"),
+            chain(
+                either(
+                    token(T_CONSTANT_ENCAPSED_STRING),
+                    token(T_LNUMBER),
+                    token(T_DNUMBER),
+                    token(T_STRING),
+                    token(T_VARIABLE)
                 ),
-                ·operator("=>")
+                buffer("=>")
             )
-        )·before,
-        ·token("{"),
-        ·optional(·layer())·values,
-        ·token("}"),
-        ·_()·is_array,
-        ·_()·is_not_array
-    )
+        ) as before,
+        token("{"),
+        optional(layer() as values),
+        token("}"),
+        _() as isArray,
+        _() as isNotArray
+    ))
 } >> function($ast) {
     $found = false;
 
-    foreach ($ast->{"·values"} as $token) {
+    foreach ($ast->{"values"} as $token) {
         if ($token->is(T_DOUBLE_ARROW)) {
             $found = true;
         }
@@ -65,20 +67,20 @@ macro ·recursion {
     $append = null;
 
     if ($found) {
-        $append = new \Yay\Ast("·is_array");
+        $append = new \Yay\Ast("isArray");
         $append->push(new \Yay\Ast());
     } else {
-        $append = new \Yay\Ast("·is_not_array");
+        $append = new \Yay\Ast("isNotArray");
         $append->push(new \Yay\Ast());
     }
 
     $ast->append($append);
-} >> {··trim(
-    ·is_array ?·{
-        ·before (new \Pre\Collections\Collection([·values]))
-    }
+} >> {$$(trim(
+    $(isArray ? {
+        $(before) (new \Pre\Collections\Collection([$(values)]))
+    })
 
-    ·is_not_array ?·{
-        ·before (new \Pre\Collections\Collection(·values))
-    }
-)}
+    $(isNotArray ? {
+        $(before) (new \Pre\Collections\Collection($(values)))
+    })
+))}
