@@ -32,44 +32,42 @@ $d = {
 
 { $a, $b, $c } = ["a" => 1, "b" => 2, "c" => 3];
 
-() => {}
-
-["foo" => {"bar" => "baz"}]
+["foo" => {"bar" => "baz"}];
 
 ~~~
 
-( (new \Pre\Collections\Collection()));
+new \Pre\Collections\Collection();
 
-[ (new \Pre\Collections\Collection())];
+[new \Pre\Collections\Collection()];
 
-( (new \Pre\Collections\Collection(["foo" => "bar"])));
+new \Pre\Collections\Collection(["foo" => "bar"]);
 
-[ (new \Pre\Collections\Collection(["foo" => "bar"]))];
+[new \Pre\Collections\Collection(["foo" => "bar"])];
 
-[true, (new \Pre\Collections\Collection(["foo" => "bar"]))];
+[true, new \Pre\Collections\Collection(["foo" => "bar"])];
 
-return (new \Pre\Collections\Collection());
+return new \Pre\Collections\Collection();
 
-$a = (new \Pre\Collections\Collection());
+$a = new \Pre\Collections\Collection();
 
-return (new \Pre\Collections\Collection($a2));
+return new \Pre\Collections\Collection($a2);
 
-$b = (new \Pre\Collections\Collection($a2));
+$b = new \Pre\Collections\Collection($a2);
 
-return (new \Pre\Collections\Collection(["foo" => "bar"]));
+return new \Pre\Collections\Collection(["foo" => "bar"]);
 
-$c = (new \Pre\Collections\Collection(["foo" => "bar"]));
+$c = new \Pre\Collections\Collection(["foo" => "bar"]);
 
-return (new \Pre\Collections\Collection(["hello" => "world",
-    "goodbye" => "world",
-]));
+return new \Pre\Collections\Collection([
+    "hello" => "world",
+    "goodbye" => "world"
+]);
 
-$d = (new \Pre\Collections\Collection(["hello" => "world",
-    "goodbye" => "world",
-]));
+$d = new \Pre\Collections\Collection([
+    "hello" => "world",
+    "goodbye" => "world"
+]);
 
 ['a' => $a, 'b' => $b, 'c' => $c] = ["a" => 1, "b" => 2, "c" => 3];
 
-() => {}
-
-["foo"=> (new \Pre\Collections\Collection(["bar" => "baz"]))]
+["foo" => new \Pre\Collections\Collection(["bar" => "baz"])];
