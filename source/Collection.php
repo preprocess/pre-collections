@@ -18,7 +18,7 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
 
     public function __construct($data = null)
     {
-        if (is_object($data) && method_exists($data, "toArray")) {
+        if (is_object($data) && $data instanceof self) {
             $data = $data->toArray();
         }
 
