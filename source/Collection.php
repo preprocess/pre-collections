@@ -26,7 +26,7 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Ser
             $data = iterator_to_array($data);
         }
 
-        if (is_object($data)) {
+        if (is_object($data) && $data instanceof stdClass) {
             $data = (array) $data;
         }
 
